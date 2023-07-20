@@ -5,15 +5,8 @@
   tasks:
     - name: Copy file docker-compose
       copy:
-        src: ~/ansible/docker-compose.yml
+        src: ~/ansible/appserver/docker-compose.yml
         dest: /home/salman/docker-compose.yml
-        owner: salman
-        group: salman
-
-    - name: Copy file Dockerfile
-      copy:
-        src: ~/ansible/Dockerfile
-        dest: /home/salman/wayshub-frontend
         owner: salman
         group: salman
 
@@ -23,6 +16,13 @@
         dest: /home/salman/wayshub-frontend
         clone: yes
         force: yes
+
+    - name: Copy file Dockerfile
+      copy:
+        src: ~/ansible/appserver/Dockerfile
+        dest: /home/salman/wayshub-frontend
+        owner: salman
+        group: salman
 
     - name: Run docker-compose
       command: docker compose up -d 
