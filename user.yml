@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Create user
+      user:
+        name: salman
+        password: "$2a$12$ulNLfMmhNyezQJyKdNA.Z.MniR64Ec3XTew6hinvaSAHGeu0P1Z/G"
+        groups: sudo
+        state: present
+        shell: /bin/bash
+        system: no
+        createhome: yes
+        home: /home/salman
+
+    - name: Change PasswordAuthentication
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: 'PasswordAuthentication'
+        line: 'PasswordAuthentication yes'
+        state: present
+      notify:
+        - Restart SSH
+
+  handlers:
+    - name: Restart SSH
+      service:
+        name: sshd
+        state: restarted
+

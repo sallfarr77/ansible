@@ -1,0 +1,9 @@
+[appserver]
+116.193.190.133
+
+[gateway]
+27.112.79.208
+
+[all:vars]
+ansible_user=sallfarr
+
