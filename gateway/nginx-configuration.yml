@@ -1,0 +1,43 @@
+- hosts: gateway
+  tasks:
+    - name: ensure nginx is at the latest version
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+      become: yes
+
+    - name: start nginx
+      service:
+        name: nginx
+        state: started
+      become: yes
+
+    - name: copy the nginx config file and restart nginx
+      copy:
+        src: /home/ubuntu/ansible/gateway/reverse-proxy.conf
+        dest: /etc/nginx/sites-enabled/reverse-proxy.conf
+      become: yes
+
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+      become: yes
+
+    - name: Install Certbot with Snap
+      snap:
+        name: certbot
+        classic: yes
+        state: present
+      become: yes
+
+    - name: Obtain and install SSL certificate with Certbot Nginx plugin
+      command: certbot --nginx -d salman.studentdumbways.my.id --non-interactive --agree-tos --email sallfarr@outlook.com
+      become: yes
+
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+      become: yes

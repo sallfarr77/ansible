@@ -1,5 +1,5 @@
 - name: Docker Installation and User Configuration
-  hosts: appserver
+  hosts: appserver, gateway
   become: true
   gather_facts: false
   vars:
