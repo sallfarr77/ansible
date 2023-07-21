@@ -13,11 +13,17 @@
         state: started
       become: yes
 
-    - name: copy the nginx config file and restart nginx
+    - name: copy the nginx config wayshub
       copy:
-        src: /home/ubuntu/ansible/gateway/reverse-proxy.conf
-        dest: /etc/nginx/sites-enabled/reverse-proxy.conf
+        src: /home/ubuntu/ansible/gateway/reverse-proxy-wayshub.conf
+        dest: /etc/nginx/sites-enabled/reverse-proxy-wayshub.conf
       become: yes
+
+    - name: copy the nginx config prometheus
+      copy:
+        src: /home/ubuntu/ansible/gateway/reverse-proxy-prometheus.conf
+        dest: /etc/nginx/sites-enabled/reverse-proxy-prometheus.conf
+      become: yes        
 
     - name: restart nginx
       service:
@@ -32,9 +38,13 @@
         state: present
       become: yes
 
-    - name: Obtain and install SSL certificate with Certbot Nginx plugin
+    - name: Obtain and install SSL certificate with Certbot Nginx wayshub
       command: certbot --nginx -d salman.studentdumbways.my.id --non-interactive --agree-tos --email sallfarr@outlook.com
       become: yes
+
+    - name: Obtain and install SSL certificate with Certbot Nginx prometheus
+      command: certbot --nginx -d prometheus.salman.studentdumbways.my.id --non-interactive --agree-tos --email sallfarr@outlook.com
+      become: yes       
 
     - name: restart nginx
       service:
