@@ -21,7 +21,7 @@
 
     - name: Copy prometheus.yml configuration file
       copy:
-        src: /home/ubuntu/ansible/monitoring/prometheus.yml
+        src: /home/ubuntu/ansible/storehouse/prometheus.yml
         dest: /home/salman/prometheus/prometheus.yml
         mode: "0644"
 

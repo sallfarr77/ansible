@@ -1,3 +1,37 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: Create user
+      user:
+        name: salman
+        groups: sudo
+        state: present
+        shell: /bin/bash
+        system: no
+        createhome: yes
+        home: /home/salman
+
+    - name: Copy SSH public key to remote host
+      authorized_key:
+        user: salman
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        state: present
+
+    - name: Change PasswordAuthentication
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PasswordAuthentication'
+        line: 'PasswordAuthentication no'
+        state: present
+      notify:
+        - Restart SSH
+
+  handlers:
+    - name: Restart SSH
+      service:
+        name: sshd
+        state: restarted
+
 - name: Docker Installation and User Configuration
   hosts: all
   become: true
@@ -72,4 +106,35 @@
         name: nodejs
         state: present
         update_cache: yes
- 
+
+
+- name: Ansible Copy Example Local to Remote
+  hosts: appserver
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Copy file docker-compose
+      copy:
+        src: ~/ansible/storehouse/docker-compose.yml
+        dest: /home/salman/docker-compose.yml
+        owner: salman
+        group: salman
+
+    - name: Clone Git repository
+      git:
+        repo: https://github.com/dumbwaysdev/wayshub-frontend
+        dest: /home/salman/wayshub-frontend
+        clone: yes
+        force: yes
+
+    - name: Copy file Dockerfile
+      copy:
+        src: ~/ansible/storehouse/Dockerfile
+        dest: /home/salman/wayshub-frontend
+        owner: salman
+        group: salman
+
+    - name: Run docker-compose
+      command: docker compose up -d
+      args:
+        chdir: /home/salman/wayshub-frontend 
