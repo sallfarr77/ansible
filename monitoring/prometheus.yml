@@ -8,4 +8,4 @@ scrape_configs:
   - job_name: 'node_exporter_metrics'
     scrape_interval: 5s
     static_configs:
-      - targets: ['116.193.190.133:9100','103.171.84.222:9100']
+      - targets: ['103.31.38.234:9100','103.171.84.222:9100']
